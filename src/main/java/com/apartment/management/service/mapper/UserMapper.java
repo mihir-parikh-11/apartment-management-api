@@ -8,6 +8,7 @@ import com.apartment.management.service.mapper.config.GenderMapper;
 import com.apartment.management.service.mapper.config.GenericMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 /**
  * A UserMapper.
@@ -25,4 +26,13 @@ public interface UserMapper extends GenericMapper<User, UserDTO> {
     @Mapping(target = "username", source = "email")
     @Mapping(target = "password", ignore = true)
     User toEntity(RegisterUserDTO dto);
+
+    @Override
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "phoneNumber", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    void updateEntityFromDto(UserDTO dto, @MappingTarget User entity);
 }

@@ -24,4 +24,12 @@ public interface AuthorityRoleService {
      * @return AuthorityRoleDTO
      */
     List<AuthorityRoleDTO> getAllRole();
+
+    /**
+     * Get Role By ID
+     *
+     * @param id roleId
+     * @return AuthorityRole
+     */
+    AuthorityRole findById(Long id);
 }
