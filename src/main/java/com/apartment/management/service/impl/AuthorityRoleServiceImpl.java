@@ -37,4 +37,10 @@ public class AuthorityRoleServiceImpl implements AuthorityRoleService {
                 .map(authorityRoleMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public AuthorityRole findById(Long id) {
+        log.info("Request for get Role by id : {}", id);
+        return authorityRoleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found with ID"));
+    }
 }
