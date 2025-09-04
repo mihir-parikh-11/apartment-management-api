@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250905003700-1" author="Mihir Parikh">
+        <createTable tableName="apartments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number_of_blocks" type="integer" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="available_amount" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_amount" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="per_flat_maintenance" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="maintenance_due_days" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="charges_per_day_due" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_1" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_2" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postcode" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manager_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apartments_status" type="varchar(255)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,2 +1,2 @@
 id,username,email,password,first_name,last_name,phone_number,status,created_date,gender_id
-1,admin@admin.com,admin@admin.com,$2a$10$RZBtq6AWjMp3tq9V7ku.0.4NzTF5kNeh9Tx1x/Cm4/hVjzOW3bQxG,Admin,User,9876543210,true,2025-08-31 00:00:00,1
+1,admin@admin.com,admin@admin.com,$2a$12$5UvIuYy6Sh7pavc6nXiVeuTr8cdrw3AdVQftStCtQpMGGYdio9R/e,Admin,User,9876543210,true,2025-08-31 00:00:00,1
