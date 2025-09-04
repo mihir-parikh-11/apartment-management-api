@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250905003700-2" author="Mihir Parikh">
+        <addForeignKeyConstraint
+                baseTableName="apartments"
+                baseColumnNames="manager_id"
+                constraintName="fk_apartments_manager_user"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="apartments"
+                baseColumnNames="created_by_id"
+                constraintName="fk_apartments_created_by_user"
+                referencedTableName="user"
+                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

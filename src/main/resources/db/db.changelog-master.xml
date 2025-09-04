@@ -10,10 +10,12 @@
     <include file="db/changelog/20250831164758_db.changelog-gender.xml"/>
     <include file="db/changelog/20250831174110_db.changelog-user.xml"/>
     <include file="db/changelog/20250831175151_db.changelog-user_role.xml"/>
+    <include file="db/changelog/20250905003700_db.changelog-apartments.xml"/>
 
 
     <!-- Constrain XMl file -->
     <include file="db/changelog/20250831180110_db.changelog-constrain_user.xml"/>
+    <include file="db/changelog/20250905003700_db.changelog-constrain_apartments.xml"/>
 
 
     <!-- Data Load XML file -->
