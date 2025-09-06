@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * An Apartments Entity.
@@ -83,4 +84,7 @@ public class Apartments implements Serializable {
     @Column(name = "created_date", updatable = false, nullable = false)
     @CreationTimestamp
     private ZonedDateTime createdDate;
+
+    @OneToMany(mappedBy = "apartments", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<ApartmentsBlocks> blocks;
 }
