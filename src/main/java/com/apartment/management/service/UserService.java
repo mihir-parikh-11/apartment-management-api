@@ -1,10 +1,7 @@
 package com.apartment.management.service;
 
 import com.apartment.management.entity.User;
-import com.apartment.management.service.dto.RegisterUserDTO;
-import com.apartment.management.service.dto.UserDTO;
-import com.apartment.management.service.dto.UserRoleDTO;
-import com.apartment.management.service.dto.UserStatusDTO;
+import com.apartment.management.service.dto.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -72,4 +69,33 @@ public interface UserService {
      * @param userStatusDTO a UserStatusDTO
      */
     void updateUserStatus(UserStatusDTO userStatusDTO);
+
+    /**
+     * Add New User
+     *
+     * @param userRequestDTO a UserRequestDTO
+     */
+    void addUser(UserRequestDTO userRequestDTO);
+
+    /**
+     * Change Password
+     *
+     * @param passwordRequestDTO a passwordRequestDTO
+     */
+    void changePassword(PasswordRequestDTO passwordRequestDTO);
+
+    /**
+     * Find By Id
+     *
+     * @param id userId
+     * @return User entity
+     */
+    User findById(Long id);
+
+    /**
+     * Get All Managers
+     *
+     * @return a list of UserBasicDetailsDTO
+     */
+    List<UserBasicDetailsDTO> getAllManagers();
 }

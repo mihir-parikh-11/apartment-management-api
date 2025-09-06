@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * A LoginDTO.
  */
@@ -14,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class LoginDTO {
+public class LoginDTO implements Serializable {
 
     @Email(message = "Invalid email format")
     private String username;

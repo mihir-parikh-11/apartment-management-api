@@ -16,9 +16,7 @@
             <column name="email" type="VARCHAR(255)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints unique="true" nullable="false"/>
-            </column>
+            <column name="password" type="VARCHAR(255)"/>
             <column name="first_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>

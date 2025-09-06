@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * A AuthResponseDTO.
  */
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthResponseDTO {
+public class AuthResponseDTO implements Serializable {
     private String accessToken;
     private String refreshToken;
 }

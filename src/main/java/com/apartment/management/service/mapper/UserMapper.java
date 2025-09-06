@@ -2,7 +2,9 @@ package com.apartment.management.service.mapper;
 
 import com.apartment.management.entity.User;
 import com.apartment.management.service.dto.RegisterUserDTO;
+import com.apartment.management.service.dto.UserBasicDetailsDTO;
 import com.apartment.management.service.dto.UserDTO;
+import com.apartment.management.service.dto.UserRequestDTO;
 import com.apartment.management.service.mapper.config.BaseMapperConfig;
 import com.apartment.management.service.mapper.config.GenderMapper;
 import com.apartment.management.service.mapper.config.GenericMapper;
@@ -26,6 +28,11 @@ public interface UserMapper extends GenericMapper<User, UserDTO> {
     @Mapping(target = "username", source = "email")
     @Mapping(target = "password", ignore = true)
     User toEntity(RegisterUserDTO dto);
+
+    @Mapping(target = "username", source = "email")
+    User toEntity(UserRequestDTO userRequestDTO);
+
+    UserBasicDetailsDTO toBasicDetailsDto(User entity);
 
     @Override
     @Mapping(target = "id", ignore = true)

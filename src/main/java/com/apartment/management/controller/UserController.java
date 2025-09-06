@@ -1,14 +1,12 @@
 package com.apartment.management.controller;
 
 import com.apartment.management.service.UserService;
-import com.apartment.management.service.dto.RegisterUserDTO;
-import com.apartment.management.service.dto.UserDTO;
-import com.apartment.management.service.dto.UserRoleDTO;
-import com.apartment.management.service.dto.UserStatusDTO;
+import com.apartment.management.service.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,5 +108,45 @@ public class UserController {
         log.info("REST request to update user status : {} ", userStatusDTO);
         userService.updateUserStatus(userStatusDTO);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Add User
+     *
+     * @param userRequestDTO a userRequestDTO
+     * @return a Void
+     */
+    @PostMapping("/add")
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    public ResponseEntity<Void> addUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+        log.info("REST request for Add User");
+        userService.addUser(userRequestDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Change Password
+     *
+     * @param passwordRequestDTO a PasswordRequestDTO
+     * @return a Void
+     */
+    @PutMapping("/change-password")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody PasswordRequestDTO passwordRequestDTO) {
+        log.info("REST request to change password");
+        userService.changePassword(passwordRequestDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Get All Managers
+     *
+     * @return List of UserBasicDetailsDTO
+     */
+    @GetMapping("/managers")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<UserBasicDetailsDTO>> getAllManagers() {
+        log.info("REST request to get all Managers");
+        return ResponseEntity.ok(userService.getAllManagers());
     }
 }
