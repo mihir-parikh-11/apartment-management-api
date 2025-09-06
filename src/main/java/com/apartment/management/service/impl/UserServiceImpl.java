@@ -6,10 +6,7 @@ import com.apartment.management.exception.GlobalException;
 import com.apartment.management.repository.UserRepository;
 import com.apartment.management.service.AuthorityRoleService;
 import com.apartment.management.service.UserService;
-import com.apartment.management.service.dto.RegisterUserDTO;
-import com.apartment.management.service.dto.UserDTO;
-import com.apartment.management.service.dto.UserRoleDTO;
-import com.apartment.management.service.dto.UserStatusDTO;
+import com.apartment.management.service.dto.*;
 import com.apartment.management.service.mapper.UserMapper;
 import com.apartment.management.util.UserUtility;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserById(Long id) {
         log.info("Request to get user by id : {}", id);
-        return userRepository.findById(id).map(userMapper::toDto).orElseThrow(() -> new GlobalException("User not found by id"));
+        return userMapper.toDto(findById(id));
     }
 
     @Override
@@ -99,5 +96,33 @@ public class UserServiceImpl implements UserService {
         log.info("Request to update user status : {} ", userStatusDTO);
         User user = userRepository.findById(userStatusDTO.getId()).orElseThrow(() -> new GlobalException("User not found by id"));
         user.setStatus(userStatusDTO.getStatus());
+    }
+
+    @Override
+    public void addUser(UserRequestDTO userRequestDTO) {
+        log.info("REST request for Add User");
+        User user = userMapper.toEntity(userRequestDTO);
+        user.setStatus(Boolean.TRUE);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(PasswordRequestDTO passwordRequestDTO) {
+        log.info("Request to change password");
+        User user = userRepository.findById(passwordRequestDTO.getId()).orElseThrow(() -> new GlobalException("User not found by id"));
+        user.setPassword(passwordEncoder.encode(passwordRequestDTO.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public User findById(Long id) {
+        log.info("Request to find user by id : {}", id);
+        return userRepository.findById(id).orElseThrow(() -> new GlobalException("User not found by id"));
+    }
+
+    @Override
+    public List<UserBasicDetailsDTO> getAllManagers() {
+        log.info("Request to get all Managers");
+        return userRepository.findAllByRolesRoleIn(List.of("ROLE_ADMIN", "ROLE_MANAGER")).stream().map(userMapper::toBasicDetailsDto).toList();
     }
 }

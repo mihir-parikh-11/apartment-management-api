@@ -69,7 +69,7 @@ public class User {
                 .collect(Collectors.joining(", "));
     }
 
-    public Object getFullName() {
+    public String getFullName() {
         return (this.firstName + " " + this.lastName).strip();
     }
 }

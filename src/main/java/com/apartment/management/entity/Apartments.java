@@ -39,13 +39,13 @@ public class Apartments implements Serializable {
     private Double dueAmount;
 
     @Column(name = "per_flat_maintenance")
-    private double perFlatMaintenance;
+    private Double perFlatMaintenance;
 
     @Column(name = "maintenance_due_days")
     private Integer maintenanceDueDays;
 
     @Column(name = "charges_per_day_due")
-    private double chargesPerDayDue;
+    private Double chargesPerDayDue;
 
     @Column(name = "address_1")
     private String address1;

@@ -10,15 +10,36 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * A GenderDTO
+ * A ApartmentsRequestDTO
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthorityRoleDTO implements Serializable {
+public class ApartmentsRequestDTO implements Serializable {
+
     private Long id;
 
-    private String role;
+    private String name;
+
+    private double availableAmount;
+
+    private double perFlatMaintenance;
+
+    private int maintenanceDueDays;
+
+    private double chargesPerDayDue;
+
+    private String address1;
+
+    private String address2;
+
+    private String city;
+
+    private String postcode;
+
+    private String state;
+
+    private String country;
 }
