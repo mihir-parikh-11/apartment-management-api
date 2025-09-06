@@ -11,11 +11,13 @@
     <include file="db/changelog/20250831174110_db.changelog-user.xml"/>
     <include file="db/changelog/20250831175151_db.changelog-user_role.xml"/>
     <include file="db/changelog/20250905003700_db.changelog-apartments.xml"/>
+    <include file="db/changelog/20250907010101_db.changelog-apartments_blocks.xml"/>
 
 
     <!-- Constrain XMl file -->
     <include file="db/changelog/20250831180110_db.changelog-constrain_user.xml"/>
     <include file="db/changelog/20250905003700_db.changelog-constrain_apartments.xml"/>
+    <include file="db/changelog/20250907010101_db.changelog-constrain_apartments_blocks.xml"/>
 
 
     <!-- Data Load XML file -->
