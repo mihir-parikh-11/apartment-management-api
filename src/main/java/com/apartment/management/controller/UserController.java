@@ -149,4 +149,16 @@ public class UserController {
         log.info("REST request to get all Managers");
         return ResponseEntity.ok(userService.getAllManagers());
     }
+
+    /**
+     * Get Owner By Email
+     *
+     * @param email ownerEmail
+     * @return DTO
+     */
+    @GetMapping("/owner")
+    public ResponseEntity<FlatOwnerDTO> getOwnerByEmail(@RequestParam(name = "email") String email) {
+        log.info("REST request to get Owner by email : {}", email);
+        return ResponseEntity.ok(userService.getOwnerByEmail(email));
+    }
 }

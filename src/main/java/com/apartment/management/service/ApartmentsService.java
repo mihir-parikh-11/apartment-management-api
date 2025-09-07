@@ -75,4 +75,11 @@ public interface ApartmentsService {
      * @param isRemoveManger isRemoveManger
      */
     void updateApartmentsManager(Long id, Long managerId, boolean isRemoveManger);
+
+    /**
+     * Get all owner Apartments
+     *
+     * @return list of DTO
+     */
+    List<ApartmentsResponseDTO> getAllOwnerApartment();
 }

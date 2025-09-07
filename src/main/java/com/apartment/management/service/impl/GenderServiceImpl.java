@@ -3,7 +3,7 @@ package com.apartment.management.service.impl;
 import com.apartment.management.repository.GenderRepository;
 import com.apartment.management.service.GenderService;
 import com.apartment.management.service.dto.GenderDTO;
-import com.apartment.management.service.mapper.config.GenderMapper;
+import com.apartment.management.service.mapper.GenderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

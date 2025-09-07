@@ -85,7 +85,7 @@ public interface UserService {
     void changePassword(PasswordRequestDTO passwordRequestDTO);
 
     /**
-     * Find By Id
+     * Find By id
      *
      * @param id userId
      * @return User entity
@@ -98,4 +98,20 @@ public interface UserService {
      * @return a list of UserBasicDetailsDTO
      */
     List<UserBasicDetailsDTO> getAllManagers();
+
+    /**
+     * Get Owner By Email
+     *
+     * @param email ownerEmail
+     * @return DTO
+     */
+    FlatOwnerDTO getOwnerByEmail(String email);
+
+    /**
+     * Add New Flat Owner
+     *
+     * @param owner DTO
+     * @return Entity
+     */
+    User addFlatOwner(FlatOwnerDTO owner);
 }

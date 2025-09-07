@@ -4,21 +4,25 @@ import com.apartment.management.entity.ApartmentsBlocks;
 import com.apartment.management.service.dto.ApartmentsBlocksDTO;
 import com.apartment.management.service.mapper.config.BaseMapperConfig;
 import com.apartment.management.service.mapper.config.GenericMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
-@Mapper(config = BaseMapperConfig.class, uses = {ApartmentsMapper.class})
+/**
+ * A ApartmentsBlocksMapper
+ */
+@Mapper(config = BaseMapperConfig.class, uses = {ApartmentsMapper.class, ApartmentBlockFlatsMapper.class})
 public interface ApartmentsBlocksMapper extends GenericMapper<ApartmentsBlocks, ApartmentsBlocksDTO> {
 
     @Override
     @Mapping(target = "apartments", source = "apartmentsId")
+    @Mapping(target = "flats", ignore = true)
     ApartmentsBlocks toEntity(ApartmentsBlocksDTO dto);
 
     @Override
+    @Mapping(target = "flats", source = "flats", qualifiedByName = "convertListToMap")
     ApartmentsBlocksDTO toDto(ApartmentsBlocks entity);
 
     @Override
+    @Mapping(target = "flats", ignore = true)
     void updateEntityFromDto(ApartmentsBlocksDTO dto, @MappingTarget ApartmentsBlocks entity);
 
     default ApartmentsBlocks convertToEntity(Long id) {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250908000300-1" author="Mihir Parikh">
+        <createTable tableName="apartment_block_flats">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="flat_number" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="floor_number" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apartments_blocks_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paid_maintenance" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_maintenance" type="decimal(15,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
