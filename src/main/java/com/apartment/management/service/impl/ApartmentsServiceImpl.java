@@ -101,4 +101,13 @@ public class ApartmentsServiceImpl implements ApartmentsService {
         else
             apartments.setManager(null);
     }
+
+    @Override
+    public List<ApartmentsResponseDTO> getAllOwnerApartment() {
+        log.info("Request to get all owner Apartments");
+        return apartmentsRepository.findAllDistinctApartmentsByOwnerId(UserUtility.getCurrentLoginUser().getId())
+                .stream()
+                .map(apartmentsMapper::toResponseDto)
+                .toList();
+    }
 }

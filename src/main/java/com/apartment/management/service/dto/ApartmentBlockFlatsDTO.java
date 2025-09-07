@@ -4,34 +4,38 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
- * A ApartmentsBlocksDTO
+ * A ApartmentBlockFlatsDTO
  */
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApartmentsBlocksDTO implements Serializable {
+public class ApartmentBlockFlatsDTO implements Serializable {
 
     private Long id;
 
-    @NotBlank(message = "BlockName cannot be blank")
-    private String blockName;
+    @NotBlank(message = "Flat number cannot be blank")
+    private String flatNumber;
 
-    private int numberOfFlats;
+    @NotNull(message = "Floor Number required")
+    private Integer floorNumber;
 
-    private Long apartmentsId;
+    private Long blocksId;
 
-    private Map<Integer, List<ApartmentBlockFlatsDTO>> flats;
+    private double paidMaintenance;
+
+    private double dueMaintenance;
+
+    private FlatOwnerDTO owner;
 }

@@ -120,4 +120,15 @@ public class ApartmentsController {
         apartmentsService.updateApartmentsManager(id, managerId, isRemoveManger);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Get all owner Apartments
+     *
+     * @return list of DTO
+     */
+    @GetMapping("/owner")
+    public ResponseEntity<List<ApartmentsResponseDTO>> getAllOwnerApartment() {
+        log.info("REST request to get all owner Apartments");
+        return ResponseEntity.ok(apartmentsService.getAllOwnerApartment());
+    }
 }

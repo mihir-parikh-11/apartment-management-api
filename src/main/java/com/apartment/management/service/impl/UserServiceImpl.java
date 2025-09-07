@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A UserServiceImpl.
@@ -124,5 +125,30 @@ public class UserServiceImpl implements UserService {
     public List<UserBasicDetailsDTO> getAllManagers() {
         log.info("Request to get all Managers");
         return userRepository.findAllByRolesRoleIn(List.of("ROLE_ADMIN", "ROLE_MANAGER")).stream().map(userMapper::toBasicDetailsDto).toList();
+    }
+
+    @Override
+    public FlatOwnerDTO getOwnerByEmail(String email) {
+        log.info("Request to get Owner by email : {}", email);
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return userMapper.toFlatOwnerDTO(user.get());
+        } else {
+            return FlatOwnerDTO.builder().email(email).build();
+        }
+    }
+
+    @Override
+    public User addFlatOwner(FlatOwnerDTO owner) {
+        log.info("Request to save flat owner : {} ", owner);
+        Optional<User> user = userRepository.findByEmail(owner.getEmail());
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            User entity = userMapper.toEntity(owner);
+            entity.setRoles(List.of(authorityRoleService.findByRole("ROLE_USER")));
+            entity.setStatus(Boolean.TRUE);
+            return userRepository.save(entity);
+        }
     }
 }

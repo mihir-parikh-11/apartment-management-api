@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * An ApartmentsBlocks Entity.
@@ -32,6 +33,9 @@ public class ApartmentsBlocks implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartments_id")
     private Apartments apartments;
+
+    @OneToMany(mappedBy = "apartmentsBlocks", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<ApartmentBlockFlats> flats;
 
     @Override
     public String toString() {

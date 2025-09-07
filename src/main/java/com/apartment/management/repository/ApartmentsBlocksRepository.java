@@ -11,5 +11,12 @@ import java.util.List;
  */
 @Repository
 public interface ApartmentsBlocksRepository extends JpaRepository<ApartmentsBlocks, Long> {
+
+    /**
+     * Find All ApartmentsBlocks By ApartmentId
+     *
+     * @param apartmentId apartmentId
+     * @return list of Entity
+     */
     List<ApartmentsBlocks> findAllByApartmentsId(Long apartmentId);
 }

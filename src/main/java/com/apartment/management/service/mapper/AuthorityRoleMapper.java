@@ -11,4 +11,11 @@ import org.mapstruct.Mapper;
  */
 @Mapper(config = BaseMapperConfig.class)
 public interface AuthorityRoleMapper extends GenericMapper<AuthorityRole, AuthorityRoleDTO> {
+
+    default AuthorityRole convertToEntity(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return AuthorityRole.builder().id(id).build();
+    }
 }
