@@ -1,6 +1,7 @@
 package com.apartment.management.service.impl;
 
 import com.apartment.management.entity.Apartments;
+import com.apartment.management.entity.FlatsMaintenances;
 import com.apartment.management.entity.User;
 import com.apartment.management.entity.enums.ApartmentsStatus;
 import com.apartment.management.exception.GlobalException;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A ApartmentsServiceImpl
@@ -26,6 +30,9 @@ import java.util.List;
 @Slf4j
 @Transactional
 public class ApartmentsServiceImpl implements ApartmentsService {
+
+    // Lock map for per-Apartment locking
+    private final ConcurrentHashMap<Long, ReentrantLock> apartmentLocks = new ConcurrentHashMap<>();
 
     private final ApartmentsRepository apartmentsRepository;
 
@@ -109,5 +116,48 @@ public class ApartmentsServiceImpl implements ApartmentsService {
                 .stream()
                 .map(apartmentsMapper::toResponseDto)
                 .toList();
+    }
+
+    @Override
+    public void updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances) {
+        log.info("Request to update Apartment Available and Due Amount by apartmentId : {}", flatsMaintenances.getFlat().getApartmentsBlocks().getApartments().getId());
+        if (flatsMaintenances.getMaintenanceStatus() == null) {
+            throw new GlobalException("Something went wrong");
+        }
+        Long apartmentId = flatsMaintenances.getFlat().getApartmentsBlocks().getApartments().getId();
+        ReentrantLock lock = apartmentLocks.computeIfAbsent(apartmentId, id -> new ReentrantLock());
+        boolean acquired = false;
+        try {
+            acquired = lock.tryLock(5, TimeUnit.SECONDS);
+            if (!acquired) {
+                throw new GlobalException("Flat is currently being updated by another request. Please try again later.");
+            }
+            Apartments apartments = findById(apartmentId);
+            Double totalAmount = flatsMaintenances.getTotalMaintenanceAmount();
+            switch (flatsMaintenances.getMaintenanceStatus()) {
+                case PAID:
+                    apartments.setAvailableAmount(apartments.getAvailableAmount() + totalAmount);
+                    apartments.setDueAmount(apartments.getDueAmount() - totalAmount);
+                    break;
+                case NOT_REQUIRED:
+                    apartments.setDueAmount(apartments.getDueAmount() - totalAmount);
+                    break;
+                default:
+                    throw new GlobalException("Unexpected maintenance status");
+            }
+            apartmentsRepository.save(apartments);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GlobalException("Thread was interrupted while waiting for flat lock");
+        } finally {
+            if (acquired) {
+                lock.unlock();
+                log.info("Lock released for Apartment ID: {}", apartmentId);
+                if (!lock.hasQueuedThreads()) {
+                    apartmentLocks.remove(apartmentId, lock);
+                    log.debug("Lock removed from map for Apartment ID: {}", apartmentId);
+                }
+            }
+        }
     }
 }

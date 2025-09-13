@@ -1,6 +1,7 @@
 package com.apartment.management.service;
 
 import com.apartment.management.entity.Apartments;
+import com.apartment.management.entity.FlatsMaintenances;
 import com.apartment.management.entity.enums.ApartmentsStatus;
 import com.apartment.management.service.dto.ApartmentsRequestDTO;
 import com.apartment.management.service.dto.ApartmentsResponseDTO;
@@ -82,4 +83,11 @@ public interface ApartmentsService {
      * @return list of DTO
      */
     List<ApartmentsResponseDTO> getAllOwnerApartment();
+
+    /**
+     * Update Apartment Available and Due Amount by apartmentId
+     *
+     * @param flatsMaintenances entity
+     */
+    void updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances);
 }

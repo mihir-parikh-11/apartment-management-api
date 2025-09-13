@@ -87,4 +87,29 @@ public class Apartments implements Serializable {
 
     @OneToMany(mappedBy = "apartments", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<ApartmentsBlocks> blocks;
+
+    @Override
+    public String toString() {
+        return "Apartments{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", numberOfBlocks=" + numberOfBlocks +
+                ", availableAmount=" + availableAmount +
+                ", dueAmount=" + dueAmount +
+                ", perFlatMaintenance=" + perFlatMaintenance +
+                ", maintenanceDueDays=" + maintenanceDueDays +
+                ", chargesPerDayDue=" + chargesPerDayDue +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", city='" + city + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", manager=" + manager +
+                ", status=" + status +
+                ", apartmentsStatus=" + apartmentsStatus +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                '}';
+    }
 }
