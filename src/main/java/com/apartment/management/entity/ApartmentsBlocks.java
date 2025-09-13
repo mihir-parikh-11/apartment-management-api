@@ -30,7 +30,7 @@ public class ApartmentsBlocks implements Serializable {
     @Column(name = "number_of_flats", nullable = false)
     private Integer numberOfFlats;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartments_id")
     private Apartments apartments;
 

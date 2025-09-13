@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250913160555-2" author="Mihir Parikh">
+        <addForeignKeyConstraint
+                baseTableName="flats_maintenances"
+                baseColumnNames="flat_id"
+                constraintName="fk_apartment_block_flat_maintenance"
+                referencedTableName="apartment_block_flats"
+                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

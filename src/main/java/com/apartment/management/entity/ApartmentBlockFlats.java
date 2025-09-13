@@ -29,7 +29,7 @@ public class ApartmentBlockFlats implements Serializable {
     @Column(name = "floor_number", nullable = false)
     private Integer floorNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartments_blocks_id")
     private ApartmentsBlocks apartmentsBlocks;
 

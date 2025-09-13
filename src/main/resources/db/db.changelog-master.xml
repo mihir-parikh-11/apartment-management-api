@@ -13,7 +13,7 @@
     <include file="db/changelog/20250905003700_db.changelog-apartments.xml"/>
     <include file="db/changelog/20250907010101_db.changelog-apartments_blocks.xml"/>
     <include file="db/changelog/20250908000300_db.changelog-apartment_block_flats.xml"/>
-
+    <include file="db/changelog/20250913160555_db.changelog-flats_maintenances.xml"/>
 
 
     <!-- Constrain XMl file -->
@@ -21,6 +21,7 @@
     <include file="db/changelog/20250905003700_db.changelog-constrain_apartments.xml"/>
     <include file="db/changelog/20250907010101_db.changelog-constrain_apartments_blocks.xml"/>
     <include file="db/changelog/20250908000300_db.changelog-constrain_apartment_block_flats.xml"/>
+    <include file="db/changelog/20250913160555_db.changelog-constrain_flats_maintenances.xml"/>
 
 
     <!-- Data Load XML file -->
