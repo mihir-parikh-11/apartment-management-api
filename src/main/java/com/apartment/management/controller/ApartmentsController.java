@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ApartmentsController {
      * @return ApartmentsResponseDTO
      */
     @PostMapping()
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    @PreAuthorize("!hasRole('ROLE_USER')")
     public ResponseEntity<ApartmentsResponseDTO> saveApartments(@RequestBody ApartmentsRequestDTO apartmentsRequestDTO) {
         log.info("REST request to save apartments : {}", apartmentsRequestDTO);
         return ResponseEntity.ok(apartmentsService.saveApartments(apartmentsRequestDTO));
@@ -43,7 +44,7 @@ public class ApartmentsController {
      * @return ApartmentsResponseDTO
      */
     @PutMapping()
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    @PreAuthorize("!hasRole('ROLE_USER')")
     public ResponseEntity<ApartmentsResponseDTO> updateApartments(@RequestBody ApartmentsRequestDTO apartmentsRequestDTO) {
         log.info("REST request to update apartments : {}", apartmentsRequestDTO);
         return ResponseEntity.ok(apartmentsService.updateApartments(apartmentsRequestDTO));
@@ -57,7 +58,7 @@ public class ApartmentsController {
      * @return Void
      */
     @PutMapping("/status/{id}")
-    @Secured({"ROLE_ADMIN"})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateApartmentsStatus(@PathVariable(name = "id") Long id, @RequestParam(name = "status") Boolean status) {
         log.info("REST request to update Apartments : {} , Status : {}", id, status);
         apartmentsService.updateApartmentsStatus(id, status);
@@ -72,7 +73,7 @@ public class ApartmentsController {
      * @return a Void
      */
     @PutMapping("/{id}/approval")
-    @Secured({"ROLE_ADMIN"})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateApartmentsApprovalStatus(@PathVariable(name = "id") Long id, @RequestParam(name = "status") ApartmentsStatus status) {
         log.info("REST request to update Apartments : {} , Approval Status : {}", id, status);
         apartmentsService.updateApartmentsApprovalStatus(id, status);
@@ -97,7 +98,7 @@ public class ApartmentsController {
      * @return list of ApartmentsResponseDTO
      */
     @GetMapping("/all")
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    @PreAuthorize("!hasRole('ROLE_USER')")
     public ResponseEntity<List<ApartmentsResponseDTO>> getAllApartments() {
         log.info("REST request to get All Apartments");
         return ResponseEntity.ok(apartmentsService.getAllApartments());
@@ -112,7 +113,7 @@ public class ApartmentsController {
      * @return Void
      */
     @PutMapping("/{id}/manager")
-    @Secured({"ROLE_ADMIN"})
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateApartmentsManager(@PathVariable(name = "id") Long id,
                                                         @RequestParam(name = "managerId", required = false) Long managerId,
                                                         @RequestParam(name = "isRemoveManger", required = false) boolean isRemoveManger) {

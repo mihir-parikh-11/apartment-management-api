@@ -86,4 +86,9 @@ public interface FlatsMaintenancesService {
      * @return list of Enums
      */
     List<MaintenanceStatusDTO> getAllMaintenanceStatus();
+
+    /**
+     * It checks for due flats maintenance and updates their due amounts.
+     */
+    void checkDueDateAndUpdateDueAmount();
 }

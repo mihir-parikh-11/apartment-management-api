@@ -14,6 +14,7 @@ import com.apartment.management.service.dto.FlatsMaintenancesRequestDTO;
 import com.apartment.management.service.dto.FlatsMaintenancesResponseDTO;
 import com.apartment.management.service.dto.MaintenanceStatusDTO;
 import com.apartment.management.service.mapper.FlatsMaintenancesMapper;
+import com.apartment.management.service.util.ChallanGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,12 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
         log.info("Request to update Flat Maintenance Status : {}", flatsMaintenancesRequestDTO);
         FlatsMaintenances flatsMaintenances = findById(flatsMaintenancesRequestDTO.getId());
         flatsMaintenances.setMaintenanceStatus(flatsMaintenancesRequestDTO.getMaintenanceStatus());
-        flatsMaintenances.setPaymentMode(flatsMaintenancesRequestDTO.getPaymentMode());
+        if (flatsMaintenancesRequestDTO.getMaintenanceStatus() == MaintenanceStatus.PAID) {
+            flatsMaintenances.setPaymentMode(flatsMaintenancesRequestDTO.getPaymentMode());
+            flatsMaintenances.setChallanNumber(ChallanGenerator.generateChallanNumber());
+            flatsMaintenances.setPaidDate(ZonedDateTime.now(ZoneOffset.UTC));
+            flatsMaintenances.setPaidAmount(flatsMaintenances.getTotalMaintenanceAmount());
+        }
         flatsMaintenances = flatsMaintenancesRepository.save(flatsMaintenances);
         apartmentBlockFlatsService.updateFlatPaidAndDueMaintenanceByFlatMaintenance(flatsMaintenances);
         apartmentsService.updateApartmentsAvailableAndDueAmountByFlatMaintenance(flatsMaintenances);
@@ -95,8 +101,9 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
                         .flat(flat)
                         .maintenanceAmount(apartments.getPerFlatMaintenance())
                         .maintenanceStatus(MaintenanceStatus.PENDING)
-                        .dueDate(now.plusDays(apartments.getMaintenanceDueDays()))
-                        .dueAmount(apartments.getChargesPerDayDue())
+                        .dueDate(now.plusDays(apartments.getMaintenanceDueDays() - 1))
+                        .dueAmount(0.00)
+                        .paidAmount(0.00)
                         .maintenanceMonth(now.getMonth().getValue())
                         .maintenanceYear(Year.now().getValue())
                         .totalMaintenanceAmount(apartments.getPerFlatMaintenance())
@@ -105,8 +112,7 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
                 apartments.setDueAmount(apartments.getDueAmount() + flatsMaintenances.getTotalMaintenanceAmount());
                 flat.setDueMaintenance(flat.getDueMaintenance() + flatsMaintenances.getTotalMaintenanceAmount());
             } catch (Exception exception) {
-                exception.printStackTrace();
-                log.error("Error to create flat maintenance records : {}", flat);
+                log.error("Error to create flat maintenance records : {} and error message : {}", flat, exception.getMessage());
             }
         }
         log.info("Finished creating monthly maintenance records.");
@@ -128,5 +134,33 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
     public List<MaintenanceStatusDTO> getAllMaintenanceStatus() {
         log.info("Request to get all MaintenanceStatus");
         return MaintenanceStatus.getVisible();
+    }
+
+    @Override
+    @Transactional
+    public void checkDueDateAndUpdateDueAmount() {
+        log.info("Checking due dates and updating due amounts...");
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        List<FlatsMaintenances> flatsMaintenances = flatsMaintenancesRepository.findAllByMaintenanceStatus(MaintenanceStatus.PENDING);
+        for (FlatsMaintenances flatMaintenance : flatsMaintenances) {
+            try {
+                ZonedDateTime dueDate = flatMaintenance.getDueDate();
+                if (now.isAfter(dueDate)) {
+                    ApartmentBlockFlats flat = flatMaintenance.getFlat();
+                    Apartments apartments = flat.getApartmentsBlocks().getApartments();
+                    Double chargesPerDayDue = apartments.getChargesPerDayDue();
+                    // Update FlatsMaintenances
+                    flatMaintenance.setDueAmount(flatMaintenance.getDueAmount() + chargesPerDayDue);
+                    flatMaintenance.setTotalMaintenanceAmount(flatMaintenance.getMaintenanceAmount() + flatMaintenance.getDueAmount());
+                    // Update ApartmentBlockFlats
+                    flat.setDueMaintenance(flat.getDueMaintenance() + chargesPerDayDue);
+                    // Update Apartments
+                    apartments.setDueAmount(apartments.getDueAmount() + chargesPerDayDue);
+                    log.info("Flat {} is overdue added charges: {}", flat.getId(), chargesPerDayDue);
+                }
+            } catch (Exception exception) {
+                log.error("Error calculating due amount for flat maintenance id={}: {}", flatMaintenance.getId(), exception.getMessage(), exception);
+            }
+        }
     }
 }
