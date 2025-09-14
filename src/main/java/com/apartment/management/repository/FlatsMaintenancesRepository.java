@@ -38,4 +38,6 @@ public interface FlatsMaintenancesRepository extends JpaRepository<FlatsMaintena
                                                                                          @Param("status") MaintenanceStatus maintenanceStatus,
                                                                                          @Param("month") Integer month,
                                                                                          @Param("year") Integer year);
+
+    List<FlatsMaintenances> findAllByMaintenanceStatus(MaintenanceStatus maintenanceStatus);
 }

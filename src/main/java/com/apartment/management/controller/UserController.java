@@ -117,7 +117,7 @@ public class UserController {
      * @return a Void
      */
     @PostMapping("/add")
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    @PreAuthorize("!hasRole('ROLE_USER')")
     public ResponseEntity<Void> addUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         log.info("REST request for Add User");
         userService.addUser(userRequestDTO);

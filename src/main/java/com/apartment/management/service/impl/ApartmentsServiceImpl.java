@@ -11,7 +11,7 @@ import com.apartment.management.service.UserService;
 import com.apartment.management.service.dto.ApartmentsRequestDTO;
 import com.apartment.management.service.dto.ApartmentsResponseDTO;
 import com.apartment.management.service.mapper.ApartmentsMapper;
-import com.apartment.management.util.UserUtility;
+import com.apartment.management.service.util.UserUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -104,7 +104,7 @@ public class ApartmentsServiceImpl implements ApartmentsService {
         log.info("Request to update Apartment Manager by apartmentId : {} and managerId : {}", id, managerId);
         Apartments apartments = findById(id);
         if (managerId != null && !isRemoveManger)
-            apartments.setManager(userService.findById(id));
+            apartments.setManager(userService.findById(managerId));
         else
             apartments.setManager(null);
     }

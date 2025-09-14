@@ -23,9 +23,20 @@ public class FlatsMaintenancesScheduler {
      * to create monthly flats maintenance records.
      */
     @Scheduled(cron = "0 5 0 1 * *", zone = "UTC")
-//    @Scheduled(cron = "0 */2 * * * *", zone = "UTC")
+//    @Scheduled(cron = "0 */2 * * * *", zone = "UTC")  // For Local Testing
     public void createMonthlyFlatsMaintenances() {
         log.info("Scheduler triggered: Starting monthly flats maintenance creation at {}", LocalDateTime.now());
         flatsMaintenancesService.createMonthlyFlatsMaintenances();
+    }
+
+    /**
+     * This method is scheduled to run every day at 12:15 AM (midnight).
+     * It checks for due flats maintenance and updates their due amounts.
+     */
+    @Scheduled(cron = "0 15 0 * * *", zone = "UTC")
+//    @Scheduled(cron = "0 */2 * * * *", zone = "UTC") // For Local Testing
+    public void checkDueDateAndUpdateDueAmount() {
+        log.info("Scheduled task started: Checking due dates and updating due amounts...");
+        flatsMaintenancesService.checkDueDateAndUpdateDueAmount();
     }
 }

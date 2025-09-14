@@ -8,7 +8,7 @@ import com.apartment.management.service.AuthorityRoleService;
 import com.apartment.management.service.UserService;
 import com.apartment.management.service.dto.*;
 import com.apartment.management.service.mapper.UserMapper;
-import com.apartment.management.util.UserUtility;
+import com.apartment.management.service.util.UserUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(RegisterUserDTO registerUserDTO) {
         log.info("Request for register user");
+        validateNewUserEmailAndPhoneNumber(registerUserDTO.getEmail(), registerUserDTO.getPhoneNumber());
         User user = userMapper.toEntity(registerUserDTO);
         user.setRoles(List.of(authorityRoleService.findByRole("ROLE_USER")));
         user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
@@ -102,6 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUser(UserRequestDTO userRequestDTO) {
         log.info("REST request for Add User");
+        validateNewUserEmailAndPhoneNumber(userRequestDTO.getEmail(), userRequestDTO.getPhoneNumber());
         User user = userMapper.toEntity(userRequestDTO);
         user.setStatus(Boolean.TRUE);
         userRepository.save(user);
@@ -149,6 +151,21 @@ public class UserServiceImpl implements UserService {
             entity.setRoles(List.of(authorityRoleService.findByRole("ROLE_USER")));
             entity.setStatus(Boolean.TRUE);
             return userRepository.save(entity);
+        }
+    }
+
+    /**
+     * Validate User by Email and Phone number
+     *
+     * @param email       email
+     * @param phoneNumber phoneNumber
+     */
+    private void validateNewUserEmailAndPhoneNumber(String email, Long phoneNumber) {
+        if (userRepository.existsByEmail(email)) {
+            throw new GlobalException("User exist by email please use different Email");
+        }
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new GlobalException("User exist by Phone number please use different Phone number");
         }
     }
 }

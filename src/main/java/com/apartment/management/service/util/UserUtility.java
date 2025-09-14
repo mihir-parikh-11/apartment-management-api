@@ -1,4 +1,4 @@
-package com.apartment.management.util;
+package com.apartment.management.service.util;
 
 import com.apartment.management.entity.User;
 import com.apartment.management.service.UserService;
