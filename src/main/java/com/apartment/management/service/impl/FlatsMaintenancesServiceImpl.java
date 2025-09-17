@@ -10,6 +10,7 @@ import com.apartment.management.repository.FlatsMaintenancesRepository;
 import com.apartment.management.service.ApartmentBlockFlatsService;
 import com.apartment.management.service.ApartmentsService;
 import com.apartment.management.service.FlatsMaintenancesService;
+import com.apartment.management.service.TransactionsService;
 import com.apartment.management.service.dto.FlatsMaintenancesRequestDTO;
 import com.apartment.management.service.dto.FlatsMaintenancesResponseDTO;
 import com.apartment.management.service.dto.MaintenanceStatusDTO;
@@ -42,6 +43,8 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
 
     private final FlatsMaintenancesMapper flatsMaintenancesMapper;
 
+    private final TransactionsService transactionsService;
+
     @Override
     public FlatsMaintenances findById(Long id) {
         log.info("Request to find FlatsMaintenances By id : {}", id);
@@ -53,16 +56,22 @@ public class FlatsMaintenancesServiceImpl implements FlatsMaintenancesService {
     public void updateFlatMaintenanceStatus(FlatsMaintenancesRequestDTO flatsMaintenancesRequestDTO) {
         log.info("Request to update Flat Maintenance Status : {}", flatsMaintenancesRequestDTO);
         FlatsMaintenances flatsMaintenances = findById(flatsMaintenancesRequestDTO.getId());
-        flatsMaintenances.setMaintenanceStatus(flatsMaintenancesRequestDTO.getMaintenanceStatus());
-        if (flatsMaintenancesRequestDTO.getMaintenanceStatus() == MaintenanceStatus.PAID) {
-            flatsMaintenances.setPaymentMode(flatsMaintenancesRequestDTO.getPaymentMode());
-            flatsMaintenances.setChallanNumber(ChallanGenerator.generateChallanNumber());
-            flatsMaintenances.setPaidDate(ZonedDateTime.now(ZoneOffset.UTC));
-            flatsMaintenances.setPaidAmount(flatsMaintenances.getTotalMaintenanceAmount());
+        if (flatsMaintenances.getMaintenanceStatus() == MaintenanceStatus.PENDING) {
+            flatsMaintenances.setMaintenanceStatus(flatsMaintenancesRequestDTO.getMaintenanceStatus());
+            if (flatsMaintenancesRequestDTO.getMaintenanceStatus() == MaintenanceStatus.PAID) {
+                flatsMaintenances.setPaymentMode(flatsMaintenancesRequestDTO.getPaymentMode());
+                flatsMaintenances.setChallanNumber(ChallanGenerator.generateChallanNumber());
+                flatsMaintenances.setPaidDate(ZonedDateTime.now(ZoneOffset.UTC));
+                flatsMaintenances.setPaidAmount(flatsMaintenances.getTotalMaintenanceAmount());
+            }
+            flatsMaintenances = flatsMaintenancesRepository.save(flatsMaintenances);
+            apartmentBlockFlatsService.updateFlatPaidAndDueMaintenanceByFlatMaintenance(flatsMaintenances);
+            Apartments apartments = apartmentsService.updateApartmentsAvailableAndDueAmountByFlatMaintenance(flatsMaintenances);
+            if (flatsMaintenancesRequestDTO.getMaintenanceStatus() == MaintenanceStatus.PAID)
+                transactionsService.addFlatMaintenanceTransaction(flatsMaintenances, apartments);
+        } else {
+            throw new GlobalException("Something went wrong");
         }
-        flatsMaintenances = flatsMaintenancesRepository.save(flatsMaintenances);
-        apartmentBlockFlatsService.updateFlatPaidAndDueMaintenanceByFlatMaintenance(flatsMaintenances);
-        apartmentsService.updateApartmentsAvailableAndDueAmountByFlatMaintenance(flatsMaintenances);
     }
 
     @Override

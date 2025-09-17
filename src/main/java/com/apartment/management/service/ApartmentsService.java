@@ -5,6 +5,7 @@ import com.apartment.management.entity.FlatsMaintenances;
 import com.apartment.management.entity.enums.ApartmentsStatus;
 import com.apartment.management.service.dto.ApartmentsRequestDTO;
 import com.apartment.management.service.dto.ApartmentsResponseDTO;
+import com.apartment.management.service.dto.MiscellaneousTransactionDTO;
 
 import java.util.List;
 
@@ -88,6 +89,15 @@ public interface ApartmentsService {
      * Update Apartment Available and Due Amount by apartmentId
      *
      * @param flatsMaintenances entity
+     * @return Entity
      */
-    void updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances);
+    Apartments updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances);
+
+    /**
+     * Update Apartment Available Amount by apartmentId
+     *
+     * @param miscellaneousTransactionDTO DTO
+     * @return Entity
+     */
+    Apartments updateApartmentsAvailableByMiscellaneous(MiscellaneousTransactionDTO miscellaneousTransactionDTO);
 }
