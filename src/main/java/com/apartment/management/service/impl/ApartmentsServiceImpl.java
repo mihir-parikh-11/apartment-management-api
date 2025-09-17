@@ -10,6 +10,7 @@ import com.apartment.management.service.ApartmentsService;
 import com.apartment.management.service.UserService;
 import com.apartment.management.service.dto.ApartmentsRequestDTO;
 import com.apartment.management.service.dto.ApartmentsResponseDTO;
+import com.apartment.management.service.dto.MiscellaneousTransactionDTO;
 import com.apartment.management.service.mapper.ApartmentsMapper;
 import com.apartment.management.service.util.UserUtility;
 import lombok.RequiredArgsConstructor;
@@ -119,7 +120,7 @@ public class ApartmentsServiceImpl implements ApartmentsService {
     }
 
     @Override
-    public void updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances) {
+    public Apartments updateApartmentsAvailableAndDueAmountByFlatMaintenance(FlatsMaintenances flatsMaintenances) {
         log.info("Request to update Apartment Available and Due Amount by apartmentId : {}", flatsMaintenances.getFlat().getApartmentsBlocks().getApartments().getId());
         if (flatsMaintenances.getMaintenanceStatus() == null) {
             throw new GlobalException("Something went wrong");
@@ -145,7 +146,36 @@ public class ApartmentsServiceImpl implements ApartmentsService {
                 default:
                     throw new GlobalException("Unexpected maintenance status");
             }
-            apartmentsRepository.save(apartments);
+            return apartmentsRepository.save(apartments);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GlobalException("Thread was interrupted while waiting for flat lock");
+        } finally {
+            if (acquired) {
+                lock.unlock();
+                log.info("Lock released for Apartment ID: {}", apartmentId);
+                if (!lock.hasQueuedThreads()) {
+                    apartmentLocks.remove(apartmentId, lock);
+                    log.debug("Lock removed from map for Apartment ID: {}", apartmentId);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Apartments updateApartmentsAvailableByMiscellaneous(MiscellaneousTransactionDTO miscellaneousTransactionDTO) {
+        log.info("Request to update Apartment Available Amount by apartmentId : {}", miscellaneousTransactionDTO.getApartmentsId());
+        Long apartmentId = miscellaneousTransactionDTO.getApartmentsId();
+        ReentrantLock lock = apartmentLocks.computeIfAbsent(apartmentId, id -> new ReentrantLock());
+        boolean acquired = false;
+        try {
+            acquired = lock.tryLock(5, TimeUnit.SECONDS);
+            if (!acquired) {
+                throw new GlobalException("Flat is currently being updated by another request. Please try again later.");
+            }
+            Apartments apartments = findById(apartmentId);
+            apartments.setAvailableAmount(apartments.getAvailableAmount() - miscellaneousTransactionDTO.getAmount());
+            return apartmentsRepository.save(apartments);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new GlobalException("Thread was interrupted while waiting for flat lock");
