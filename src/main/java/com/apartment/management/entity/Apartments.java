@@ -88,6 +88,17 @@ public class Apartments implements Serializable {
     @OneToMany(mappedBy = "apartments", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<ApartmentsBlocks> blocks;
 
+    @Transient
+    private Integer totalFlats;
+
+    public Integer getTotalFlats() {
+        if (blocks == null)
+            return 0;
+        return totalFlats = blocks.stream()
+                .mapToInt(ApartmentsBlocks::getNumberOfFlats)
+                .sum();
+    }
+
     @Override
     public String toString() {
         return "Apartments{" +
