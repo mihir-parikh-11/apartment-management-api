@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="20250920192855-2" author="Mihir Parikh">
+        <addForeignKeyConstraint
+                baseTableName="apartments_tickets"
+                baseColumnNames="created_by_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_apartments_tickets_user"/>
+        <addForeignKeyConstraint
+                baseTableName="apartments_tickets"
+                baseColumnNames="apartments_id"
+                referencedTableName="apartments"
+                referencedColumnNames="id"
+                constraintName="fk_apartments_tickets_apartments"/>
+    </changeSet>
+</databaseChangeLog>
