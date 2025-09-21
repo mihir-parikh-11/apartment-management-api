@@ -2,6 +2,7 @@ package com.apartment.management.repository;
 
 import com.apartment.management.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,4 +53,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return boolean
      */
     boolean existsByPhoneNumber(Long phoneNumber);
+
+    /**
+     * Get count of User Roles
+     *
+     * @return Object[]
+     */
+    @Query("SELECT r.role, COUNT(u) FROM User u JOIN u.roles r GROUP BY r.role")
+    List<Object[]> countUsersByRole();
 }

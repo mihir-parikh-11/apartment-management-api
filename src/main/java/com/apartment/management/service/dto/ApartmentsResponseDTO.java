@@ -58,4 +58,6 @@ public class ApartmentsResponseDTO implements Serializable {
     private UserDTO createdBy;
 
     private ZonedDateTime createdDate;
+
+    private Integer totalFlats;
 }
