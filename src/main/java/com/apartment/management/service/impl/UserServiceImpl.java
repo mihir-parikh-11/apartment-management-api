@@ -154,6 +154,32 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDTO updateCurrentLoginUserProfile(UserDTO userDTO) {
+        log.info("Request to Update current login user profile");
+        User currentLoginUser = UserUtility.getCurrentLoginUser();
+        userMapper.updateEntityFromDto(userDTO, currentLoginUser);
+        return userMapper.toDto(userRepository.save(currentLoginUser));
+    }
+
+    @Override
+    public void changeCurrentLoginUserPassword(ChangePasswordDTO changePasswordDTO) {
+        log.info("Request to Change current login user password");
+        User currentLoginUser = UserUtility.getCurrentLoginUser();
+        // Check if the old password matches
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), currentLoginUser.getPassword())) {
+            log.warn("Incorrect old password for user {}", currentLoginUser.getUsername());
+            throw new GlobalException("The old password is incorrect.");
+        }
+        // Validate that the new password isn't the same as the old one
+        if (passwordEncoder.matches(changePasswordDTO.getNewPassword(), currentLoginUser.getPassword())) {
+            log.warn("The new password is the same as the old one for user {}", currentLoginUser.getUsername());
+            throw new GlobalException("The new password cannot be the same as the old password.");
+        }
+        currentLoginUser.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        userRepository.save(currentLoginUser);
+    }
+
     /**
      * Validate User by Email and Phone number
      *

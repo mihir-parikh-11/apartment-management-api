@@ -2,7 +2,6 @@ package com.apartment.management.service;
 
 import com.apartment.management.entity.User;
 import com.apartment.management.service.dto.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface UserService {
      *
      * @param registerUserDTO a RegisterUserDTO
      */
-    void registerUser(@Valid RegisterUserDTO registerUserDTO);
+    void registerUser(RegisterUserDTO registerUserDTO);
 
     /**
      * Get User by id
@@ -114,4 +113,18 @@ public interface UserService {
      * @return Entity
      */
     User addFlatOwner(FlatOwnerDTO owner);
+
+    /**
+     * Update Current Login User Profile
+     *
+     * @return a UserDTO
+     */
+    UserDTO updateCurrentLoginUserProfile(UserDTO userDTO);
+
+    /**
+     * Change current login user password
+     *
+     * @param changePasswordDTO DTO
+     */
+    void changeCurrentLoginUserPassword(ChangePasswordDTO changePasswordDTO);
 }

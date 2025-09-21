@@ -161,4 +161,28 @@ public class UserController {
         log.info("REST request to get Owner by email : {}", email);
         return ResponseEntity.ok(userService.getOwnerByEmail(email));
     }
+
+    /**
+     * Update Current Login User Profile
+     *
+     * @return a UserDTO
+     */
+    @PutMapping("/profile")
+    public ResponseEntity<UserDTO> updateCurrentLoginUserProfile(@Valid @RequestBody UserDTO userDTO) {
+        log.info("REST request to Update current login user profile");
+        return ResponseEntity.ok(userService.updateCurrentLoginUserProfile(userDTO));
+    }
+
+    /**
+     * Change current login user password
+     *
+     * @param changePasswordDTO DTO
+     * @return void
+     */
+    @PutMapping("/profile/change-password")
+    public ResponseEntity<Void> changeCurrentLoginUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        log.info("REST request to Change current login user password");
+        userService.changeCurrentLoginUserPassword(changePasswordDTO);
+        return ResponseEntity.ok().build();
+    }
 }
